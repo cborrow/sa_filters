@@ -1,0 +1,174 @@
+<style>
+div.mb-3 {
+	marging-bottom: 15px;
+}
+div.tab-pane {
+	display: none;
+}
+div.tab-pane.active {
+	display: block;
+}
+</style>
+<div class="row border-bottom white-bg dashboard-header">
+	<div clas="col-lg-10">
+		<h2>SpamAssassin Filters ({{ mod.user }})</h2>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a href="?">Home</a></li>
+			<li class="breadcrumb-item active"><strong>SpamAssassin Filters</strong></li>
+		</ol>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<p>&nbsp;</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h5>SpamAssassin User Preferences</h5>
+				<p>Allows you to adjust the spam score threshold, subject prepend string, as well as the whitelist and blacklist for your user SpamAssassin settings</p>
+			</div>
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-lg-9">
+						<div class="tabs-container">
+							<ul class="nav nav-tabs" role="tablist">
+								<li>
+									<a class="nav-link active show" data-toggle="tab" href="#tab_basic">Preferences</a>
+								</li>
+								<li>
+									<a class="nav-link" data-toggle="tab" href="#tab_whitelist">Whitelist</a>
+								</li>
+								<li>
+									<a class="nav-link" data-toggle="tab" href="#tab_blacklist">Blacklist</a>
+								</li>
+							</ul>
+							<div id="tab_basic" class="tab-pane active" role="tabpanel">
+								<div class="panel-body">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Preference Name</th>
+												<td>Description</td>
+												<th>Value</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<label class="form-label">Score Threshold</label>
+												</td>
+												<td>
+													<div class="form-text">Sets the minimum score that an email must reach to be marked as spam</div>
+												</td>
+												<td>
+													<input class="form-control" type="text" name="score_threshold" placeholder="5.0" value="{{ mod.score }}" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label class="form-label">Prepend message subject</label>
+												</td>
+												<td>
+													<div class="form-text">Prepend a string to the subject of any message that is marked as spam</div>
+												</td>
+												<td>
+													<input class="form-control" type="text" name="prepend_subject" placeholder="Leave empty to not include" value="{{ mod.prepend }}" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div id="tab_whitelist" class="tab-pane" role="tablepanel">
+								<div class="panel-body">
+									<div class="mb-3">
+										<label class="form-label">Whitelist</label>
+										<div class="text-right">
+											<button type="button" class="btn" id="add-to-whitelist">New whitelist entry</button>
+										</div>
+										<table class="table">
+											<thead>
+												<tr>
+													<th>Email Address or Domain</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+											<tbody id="whitelist">
+												{% for wl in mod.whitelist %}
+													{% set id = random() %}
+													<tr class="conf_item" aria-describedby="{{ id }}">
+														<td>
+															<input class="form-control" type="text" name="whitelist[]" value="{{ wl }}" />
+														</td>
+														<td>
+															<button type="button" class="btn btn-danger btn-xs" title="Delete" id="{{ id }}"><i class="fa fa-trash"></i></button>
+														</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div id="tab_blacklist" class="tab-pane" role="tabpanel">
+								<div class="panel-body">
+									<div class="mb-3">
+										<label class="form-label">Blacklist</label>
+										<div class="text-right">
+											<button type="button" class="btn" id="add-to-blacklist">New blacklist entry</button>
+										</div>
+										<table class="table">
+											<thead>
+												<tr>
+													<th>Email Address or Domain</th>
+													<th>Actions</th>
+												</tr>
+											</thead>
+											<tbody id="blacklist">
+												{% for bl in mod.blacklist %}
+													<tr class="conf_item" aria-describedby="{{ id }}">
+														<td>
+															<input class="form-control" type="text" name="blacklist[]" value="{{ bl }}" />
+														</td>
+														<td>
+															<button type="button" class="btn btn-danger btn-xs" title="Delete" id="{{ id }}"><i class="fa fa-trash"></i></button>
+														</td>
+													</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="ibox save-btn-div">
+							<div class="ibox-title">
+								<h5>Save your changes</h5>
+							</div>
+							<div class="ibox-content">
+								<span class="btn btn-success btn-block" style="font-size:1.2rem;" onclick="update_user_prefs()">
+									<i class="fa fa-save"></i> Update changes
+								</span>
+							</div>
+						</div>
+						<div class="ibox save-btn-div">
+							<div class="ibox-title">
+								<h5>User Config Info</h5>
+							</div>
+							<div class="ibox-content">
+								<p>File Last Modified : {{ mod.last_mod_time }}</p>
+								<p>Whitelist Entries : {{ mod.whitelist|length }}</p>
+								<p>Blacklist Entries : {{ mod.blacklist|length }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

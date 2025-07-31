@@ -1,0 +1,135 @@
+$('.btn-danger').click(function(e) {
+	delete_list_item(e);
+})
+
+$('#add-to-whitelist').click(function() {
+	var buttonId = makeId(10);
+	var whitelist = document.querySelector('#whitelist');
+	var wlRow = document.createElement('tr');
+	wlRow.setAttribute('class', 'conf_item');
+	wlRow.setAttribute('aria-describedby', buttonId);
+
+	var wlItem = document.createElement('td');
+	
+
+	var input = document.createElement('input');
+	input.setAttribute('type', 'text');
+	input.setAttribute('class', 'form-control');
+	input.setAttribute('name', 'whitelist[]');
+	input.setAttribute('placeholder', 'johndoe@domain.tld');
+	input.setAttribute('aria-describedby', buttonId);
+
+	var wlButton = document.createElement('td');
+	var button = document.createElement('button');
+	button.setAttribute('class', 'btn btn-danger btn-xs');
+	button.setAttribute('title', 'Delete');
+	button.setAttribute('type', 'button');
+	button.setAttribute('id', buttonId);
+	button.innerHTML='<i class="fa fa-trash"></i>';
+	button.addEventListener('click', delete_list_item);
+	wlButton.appendChild(button);
+	
+	wlItem.appendChild(input);
+	wlRow.appendChild(wlItem);
+	wlRow.appendChild(wlButton);
+
+	whitelist.prepend(wlRow);
+});
+
+$('#add-to-blacklist').click(function() {
+	var buttonId = makeId(10);
+	var blacklist = document.querySelector('#blacklist');
+	var blRow = document.createElement('tr');
+	blRow.setAttribute('class', 'conf_item');
+	blRow.setAttribute('aria-describedby', buttonId);
+
+	var blItem = document.createElement('td');
+
+	var input = document.createElement('input');
+	input.setAttribute('type', 'text');
+	input.setAttribute('class', 'form-control');
+	input.setAttribute('name', 'blacklist[]');
+	input.setAttribute('placeholder', 'johndoe@domain.tld');
+	input.setAttribute('aria-describedby', buttonId);
+
+	var blButton = document.createElement('td');
+	var button = document.createElement('button');
+	button.setAttribute('class', 'btn btn-danger btn-xs');
+	button.setAttribute('title', 'Delete');
+	button.setAttribute('type', 'button');
+	button.setAttribute('id', buttonId);
+	button.innerHTML='<i class="fa fa-trash"></i>';
+	button.addEventListener('click', delete_list_item);
+	blButton.appendChild(button);
+	
+	blItem.appendChild(input);
+	blRow.appendChild(blItem);
+	blRow.appendChild(blButton);
+
+	blacklist.prepend(blRow);
+});
+
+function makeId(length) {
+	var result = '';
+	var chars = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+	for(var i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * length));
+	}
+	return result;
+}
+
+function delete_list_item(e) {
+	var buttonId = "";
+
+	if(e.target.tagName.toLowerCase() == "i") {
+		buttonId = e.target.parentNode.getAttribute('id');
+	}
+	else {
+		buttonId = e.target.getAttribute('id');
+	}
+
+	var tableRow = document.querySelector('[aria-describedby="' + buttonId + '"]');
+
+	if(tableRow != null) {
+	}
+	tableRow.remove();
+}
+
+async function update_user_prefs() {
+	var body = {};
+	body["save_user_prefs"] = true;
+	body["score_threshold"] = document.querySelector('input[name="score_threshold"]').value;
+	body["prepend_subject"] = document.querySelector('input[name="prepend_subject"]').value;
+
+	var whitelistItems = [];
+	document.querySelectorAll('input[name="whitelist[]"]').forEach((wlItem) => {
+		if(wlItem != null && wlItem.tagName.toLowerCase() == "input") {
+			whitelistItems.push(wlItem.value);
+		}
+	});
+	body["whitelist"] = whitelistItems;
+
+	var blacklistItems = [];
+	document.querySelectorAll('input[name="blacklist[]"]').forEach((blItem) => {
+		if(blItem != null && blItem.tagName.toLowerCase() == "input") {
+			blacklistItems.push(blItem.value);
+		}
+	});
+	body["blacklist"] = blacklistItems;
+
+	const response = await fetch(window.location.href, {
+		method: "POST",
+		body: JSON.stringify(body)
+	});
+
+	console.log(body);
+	console.log(response);
+
+	if(response.status == 200) {
+		noti_bubble('{{langmod.SAVESUCCESS}}','{{langmod.SUCCESS}}','success',true,false,'3000',true);
+	}
+	else {
+		noti_bubble('{{langmod.SAVEFAILED}}','{{langmod.FAIL}}','warning',true,false,'6000',true);
+	}
+}
