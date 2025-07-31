@@ -1,7 +1,22 @@
 #!/usr/bin/bash
 
-if [ "$1" == "--install" ]; then
+if [ "$#" -eq 0 ] || [ "$1" == "--install" ]; then
+	echo "Downloading current module..."
+	echo
+	install_dir="/tmp/sa_filter_module"
+	mkdir -p $install_dir
+
+	if [ $(command -v git) ]; then
+		git clone --quiet https://github.com/cborrow/sa_filters.git $install_dir > /dev/null
+		cd ${install_dir}
+	else
+		wget https://github.com/cborrow/sa_filters/archive/refs/heads/main.zip -O ${install_dir}/sa_filter.zip
+		unzip /tmp/sa_filter_module/sa_filter.zip -d $install_dir
+		cd ${install_dir}/sa_filters-main
+	fi
+
 	echo "Installing module...";
+	echo
 	mkdir -p /usr/local/cwpsrv/var/services/user_files/modules/sa_filters
 
 	cp sa_filters.php /usr/local/cwpsrv/var/services/user_files/modules/sa_filters.php
@@ -10,6 +25,9 @@ if [ "$1" == "--install" ]; then
 	cp sa_filters.js.twig /usr/local/cwpsrv/var/services/users/cwp_theme/original/js/modules/sa_filters.js.twig
 	cp Log.php /usr/local/cwpsrv/var/services/user_files/modules/sa_filters/Log.php
 	cp UserPrefs.php /usr/local/cwpsrv/var/services/user_files/modules/sa_filters/UserPrefs.php
+
+	cd /tmp
+	rm -rf /tmp/sa_filter_module
 
 	read -p "Module installed. Do you wish to restart CWP services now? (y/n): " restart_cwp
 
