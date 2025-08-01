@@ -129,6 +129,7 @@ div.tab-pane.active {
 											</thead>
 											<tbody id="blacklist">
 												{% for bl in mod.blacklist %}
+													{% set id = random() %}
 													<tr class="conf_item" aria-describedby="{{ id }}">
 														<td>
 															<input class="form-control" type="text" name="blacklist[]" value="{{ bl }}" />
