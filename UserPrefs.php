@@ -92,68 +92,42 @@ class UserPrefs {
 		}
 	}
 
-	// public function read() {
-	// 	$lines = file($this->_userConfigPath);
-
-	// 	foreach($lines as $linenum => $line) {
-	// 		#$line = $this->convertWhitespace($line);
-
-	// 		if(str_starts_with($line, "#") || strlen($line) < 5) {
-	// 			continue;
-	// 		}
-	// 		else {
-	// 			$line_parts = explode(" ", $line);
-
-	// 			if(str_starts_with($line, "blacklist_from")) {
-	// 				$this->_blacklist[] = $line_parts[1];
-	// 			}
-	// 			else if(str_starts_with($line, "whitelist_from")) {
-	// 				$this->_whitelist[] = $line_parts[1];
-	// 			}
-	// 			else if(str_starts_with($line, "rewrite_header")) {
-	// 				if(strtolower($line_parts[1]) != "subject") {
-	// 					continue;
-	// 				}
-	// 				else {
-	// 					if(count($line_parts) > 3) {
-	// 						for($i = 3; $i < count($line_parts); $i++) {
-	// 							$line_parts[2] += " " + $line_parts[$i];
-	// 						}
-	// 					}
-	// 					$this->subjectRewriteStr = $line_parts[2];
-	// 				}
-	// 			}
-	// 			else if(str_starts_with($line, "required_score")) {
-	// 				$this->scoreThreshold = $line_parts[1];
-	// 			}
-	// 			else if(str_starts_with($line, "score")) {
-	// 				$this->addCustomScore($line_parts[1], $line_parts[2]);
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 	public function read() {
 		$lines = file($this->_userConfigPath);
 
-		foreach($lines as $line) {
-			if(substr($line, 0, 1) == "#")
+		foreach($lines as $linenum => $line) {
+			#$line = $this->convertWhitespace($line);
+
+			if(str_starts_with($line, "#") || strlen($line) < 5) {
 				continue;
+			}
+			else {
+				$line_parts = explode(" ", $line);
 
-			list($setting_name, $value1, $value2) = explode(" ", $line);
-
-			if($setting_name == "required_score") {
-				$this->scoreThreshold = $value1;
-			}
-			else if($setting_name == "whitelist_from") {
-				$this->addWhitelist($value1);
-			}
-			else if($setting_name == "blacklist_from") {
-				$this->addBlacklist($value2);
-			}
-			else if($setting_name == "rewrite_header") {
-				if(strtolower($value1) == "subject") {
-					$this->subjectRewriteStr = $value2;
+				if(str_starts_with($line, "blacklist_from")) {
+					$this->_blacklist[] = $line_parts[1];
+				}
+				else if(str_starts_with($line, "whitelist_from")) {
+					$this->_whitelist[] = $line_parts[1];
+				}
+				else if(str_starts_with($line, "rewrite_header")) {
+					if(strtolower($line_parts[1]) != "subject") {
+						continue;
+					}
+					else {
+						if(count($line_parts) > 3) {
+							for($i = 3; $i < count($line_parts); $i++) {
+								$line_parts[2] += " " + $line_parts[$i];
+							}
+						}
+						$this->subjectRewriteStr = $line_parts[2];
+					}
+				}
+				else if(str_starts_with($line, "required_score")) {
+					$this->scoreThreshold = $line_parts[1];
+				}
+				else if(str_starts_with($line, "score")) {
+					$this->addCustomScore($line_parts[1], $line_parts[2]);
 				}
 			}
 		}
