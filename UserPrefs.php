@@ -79,7 +79,7 @@ class UserPrefs {
 			fwrite($fp, "## User blacklist entries\n");
 
 			foreach($this->_blacklist as $bl) {
-				fwrite($fp, "blacklist_from {bl}\n");
+				fwrite($fp, "blacklist_from {$bl}\n");
 			}
 		}
 		else {
