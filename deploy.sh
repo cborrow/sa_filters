@@ -25,6 +25,9 @@ if [ "$#" -eq 0 ] || [ "$1" == "--install" ]; then
 	cp sa_filters.js.twig /usr/local/cwpsrv/var/services/users/cwp_theme/original/js/modules/sa_filters.js.twig
 	cp Log.php /usr/local/cwpsrv/var/services/user_files/modules/sa_filters/Log.php
 	cp UserPrefs.php /usr/local/cwpsrv/var/services/user_files/modules/sa_filters/UserPrefs.php
+	cp menu_sa_filters.html /usr/local/cwpsrv/var/services/users/cwp_theme/original/menu_sa_filters.html
+
+	echo '{% include "menu_sa_filters.html" %}' >> /usr/local/cwpsrv/var/services/users/cwp_theme/original/menu_left.html
 
 	cd /tmp
 	rm -rf /tmp/sa_filter_module
@@ -45,6 +48,9 @@ if [ "$1" == "--uninstall" ]; then
 	rm -f /usr/local/cwpsrv/var/services/users/cwp_theme/original/js/modules/sa_filters.js.twig
 	rm -f /usr/local/cwpsrv/var/services/user_files/modules/sa_filters/Log.php
 	rm -f /usr/local/cwpsrv/var/services/user_files/modules/sa_filters/UserPrefs.php
+	rm -f /usr/local/cwpsrv/var/services/users/cwp_theme/original/menu_sa_filters.html
+
+	sed -i 's/{% include "menu_sa_filters.html" %}//' /usr/local/cwpsrv/var/services/users/cwp_theme/original/menu_left.html
 
 	echo "Plugin removed.";
 fi
