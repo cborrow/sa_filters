@@ -82,8 +82,7 @@ class UserPrefs {
 				fwrite($fp, "blacklist_from {$bl}\n");
 			}
 		} else {
-			Log::append("Failed to create lock for file {$this->_userConfigPath}", "Error");
-			//Return an error
+			error_log("Error: Failed to create lock for file {$this->_userConfigPath}");
 		}
 
 		if ($fp != null && fstat($fp) !== false) {
@@ -132,11 +131,11 @@ class UserPrefs {
 
 	public function addCustomScore($name, $value) {
 		if (array_key_exists($this->_customScores, $name)) {
-			Log::append("Custom score {$name} already exists. Replacing {$this->_customScores[$name]} with {$value}");
+			error_log("Warning: Custom score {$name} already exists. Replacing {$this->_customScores[$name]} with {$value}");
 		}
 
 		if (! is_numeric($value)) {
-			Log::append("Invalid value provided, most be a valid floating point number");
+			error_log("Error: Invalid value provided, most be a valid floating point number");
 			return false;
 		}
 
@@ -154,9 +153,9 @@ class UserPrefs {
 		}
 
 		if ($this->contains($value, $this->_whitelist)) {
-			Log::append("A whitelist entry for {$value} already exists");
+			error_log("Warning: A whitelist entry for {$value} already exists");
 		} else if ($this->contains($value, $this->_blacklist)) {
-			Log::apend("A blacklist entry for {$value} already exists, ignoring.", "Warning");
+			error_log("Warning: A blacklist entry for {$value} already exists, ignoring.", "Warning");
 		} else {
 			$this->_whitelist[] = $value;
 			return true;
@@ -183,9 +182,9 @@ class UserPrefs {
 		}
 
 		if ($this->contains($value, $this->_blacklist)) {
-			Log::append("A blacklist entry for {$value} already exists");
+			error_log("Warning: A blacklist entry for {$value} already exists");
 		} else if ($this->contains($value, $this->_whitelist)) {
-			Log::append("A whitelist entry for {$value} already exists, ignoring.", "Warning");
+			error_log("Warning: A whitelist entry for {$value} already exists, ignoring.", "Warning");
 		} else {
 			$this->_blacklist[] = $value;
 			return true;
