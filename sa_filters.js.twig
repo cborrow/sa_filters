@@ -99,8 +99,8 @@ function delete_list_item(e) {
 async function update_user_prefs() {
 	var body = {};
 	body["save_user_prefs"] = true;
-	body["score_threshold"] = document.querySelector('input[name="score_threshold"]').value;
-	body["prepend_subject"] = document.querySelector('input[name="prepend_subject"]').value;
+	//body["score_threshold"] = document.querySelector('input[name="score_threshold"]').value;
+	//body["prepend_subject"] = document.querySelector('input[name="prepend_subject"]').value;
 
 	var whitelistItems = [];
 	document.querySelectorAll('input[name="whitelist[]"]').forEach((wlItem) => {
@@ -118,13 +118,18 @@ async function update_user_prefs() {
 	});
 	body["blacklist"] = blacklistItems;
 
+	for i = 0; i < whitelistItems.length(); i++ {
+		if(blacklistItems.includes(whitelistItems[i])) {
+			noti_bubble('The item ' + whitelistItems[i] + ' exists within both the whitelist and blacklist', 
+				'{{ langmod.FAIL }}', 'warning', true, false, '6000', true);
+			return false;
+		}
+	}
+
 	const response = await fetch(window.location.href, {
 		method: "POST",
 		body: JSON.stringify(body)
 	});
-
-	console.log(body);
-	console.log(response);
 
 	if(response.status == 200) {
 		noti_bubble('{{langmod.SAVESUCCESS}}','{{langmod.SUCCESS}}','success',true,false,'3000',true);
