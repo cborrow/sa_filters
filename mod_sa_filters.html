@@ -11,10 +11,10 @@ div.tab-pane.active {
 </style>
 <div class="row border-bottom white-bg dashboard-header">
 	<div clas="col-lg-10">
-		<h2>SpamAssassin Filters ({{ mod.user }})</h2>
+		<h2>Email White/Blacklist ({{ mod.user }})</h2>
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="?">Home</a></li>
-			<li class="breadcrumb-item active"><strong>SpamAssassin Filters</strong></li>
+			<li class="breadcrumb-item active"><strong>Email White/Blacklist</strong></li>
 		</ol>
 	</div>
 </div>
@@ -27,17 +27,17 @@ div.tab-pane.active {
 	<div class="col-lg-12">
 		<div class="ibox">
 			<div class="ibox-title">
-				<h5>SpamAssassin User Preferences</h5>
-				<p>Allows you to adjust the spam score threshold, subject prepend string, as well as the whitelist and blacklist for your user SpamAssassin settings</p>
+				<h5>Email White/Blacklist</h5>
+				<p>Allows you to control the domains or email addresses that are white or blacklisted on your account.</p>
 			</div>
 			<div class="ibox-content">
 				<div class="row">
 					<div class="col-lg-9">
 						<div class="tabs-container">
 							<ul class="nav nav-tabs" role="tablist">
-								<li>
+								<!-- <li>
 									<a class="nav-link active show" data-toggle="tab" href="#tab_basic">Preferences</a>
-								</li>
+								</li> -->
 								<li>
 									<a class="nav-link" data-toggle="tab" href="#tab_whitelist">Whitelist</a>
 								</li>
@@ -45,7 +45,7 @@ div.tab-pane.active {
 									<a class="nav-link" data-toggle="tab" href="#tab_blacklist">Blacklist</a>
 								</li>
 							</ul>
-							<div id="tab_basic" class="tab-pane active" role="tabpanel">
+							<!-- <div id="tab_basic" class="tab-pane active" role="tabpanel">
 								<div class="panel-body">
 									<table class="table">
 										<thead>
@@ -81,7 +81,7 @@ div.tab-pane.active {
 										</tbody>
 									</table>
 								</div>
-							</div>
+							</div> -->
 							<div id="tab_whitelist" class="tab-pane" role="tablepanel">
 								<div class="panel-body">
 									<div class="mb-3">
@@ -159,10 +159,10 @@ div.tab-pane.active {
 						</div>
 						<div class="ibox save-btn-div">
 							<div class="ibox-title">
-								<h5>User Config Info</h5>
+								<h5>Stats</h5>
 							</div>
 							<div class="ibox-content">
-								<p>File Last Modified : {{ mod.last_mod_time }}</p>
+								<!-- <p>File Last Modified : {{ mod.last_mod_time }}</p> -->
 								<p>Whitelist Entries : {{ mod.whitelist|length }}</p>
 								<p>Blacklist Entries : {{ mod.blacklist|length }}</p>
 							</div>
