@@ -1,10 +1,9 @@
 <?php
-#include __DIR__ . "/sa_filters/UserPrefs.php";
 
 $config = [];
 
-if (file_exists(__DIR__ . '/sa_filters/config.php')) {
-	include __DIR__ . '/sa_filters/config.php';
+if (file_exists('/usr/local/cwpsrv/var/services/users/modules/sa_filters/sa_filters/config.php')) {
+	include '/usr/local/cwpsrv/var/services/users/modules/sa_filters/sa_filters/config.php';
 } else {
 	$config['amavis']['host'] = 'localhost';
 	$config['amavis']['name'] = 'amavis';
@@ -12,9 +11,7 @@ if (file_exists(__DIR__ . '/sa_filters/config.php')) {
 	$config['amavis']['pass'] = 'secret';
 }
 
-include __DIR__ . "/sa_filters/Amavis.php";
-
-#$prefs = new UserPrefs("/home/{$_SESSION['username']}/.spamassassin/user_prefs.cf");
+include "/usr/local/cwpsrv/var/services/users/modules/sa_filters/Amavis.php";
 
 $amavis = new Amavis();
 $amavis->loadConfig($config['amavis']);
@@ -42,16 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	#$prefs->write();
 }
 
-if ($prefs->exists()) {
-	#$prefs->read();
+$mod['user'] = $_SESSION['username'];
+#$mod['score'] = $prefs->scoreThreshold;
+#$mod['prepend'] = $prefs->subjectPrependStr;
+#$mod['whitelist'] = $prefs->getWhitelist();
+#$mod['blacklist'] = $prefs->getBlacklist();
+#$mod['last_mod_time'] = date ("M d, Y H:i:s", $prefs->lastModTime());
 
-	$mod['user'] = $_SESSION['username'];
-	#$mod['score'] = $prefs->scoreThreshold;
-	#$mod['prepend'] = $prefs->subjectPrependStr;
-	#$mod['whitelist'] = $prefs->getWhitelist();
-	#$mod['blacklist'] = $prefs->getBlacklist();
-	#$mod['last_mod_time'] = date ("M d, Y H:i:s", $prefs->lastModTime());
-
-	$mod['whitelist'] = $amavis->getWhitelist();
-	$mod['blacklist'] = $amavis->getBlacklist();
-}
+$mod['whitelist'] = $amavis->getWhitelist();
+$mod['blacklist'] = $amavis->getBlacklist();
