@@ -74,6 +74,8 @@ function has_amavis_database {
 		if [ $config_db_exists -gt 0 ]; then
 			return ${database_name}
 		fi
+	else
+		return "amavis"
 	fi
 	return false;
 }
@@ -94,7 +96,7 @@ function get_amavis_db_pass {
 }
 
 function has_standard_amavis_tables {
-	if [ "#@" -eq 0 ]; then
+	if [ "$@" -eq 0 ]; then
 		echo "Error: Must pass a database name to has_standard_amavis_tables"
 		return false;
 	fi
@@ -110,7 +112,7 @@ function has_standard_amavis_tables {
 }
 
 function contains_item {
-	if [ "#@" -eq 0 ]; then
+	if [ "$@" -eq 0 ]; then
 		echo -e "${RED}Error${CLR}: contains_item expects two items, an array and a string"
 		return false;
 	fi
@@ -239,7 +241,7 @@ elif [ "$#" -gt 0 ] && [ "$1" == "--install" ]; then
 	for file in $[!files[@]]; do
 		if ! [ -f $file ]; then
 			echo -e "${RED}Error${CLR}: One or more module files are missing from the current directory."
-			exit(1);
+			exit 1
 		fi
 	done
 
