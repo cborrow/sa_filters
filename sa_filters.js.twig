@@ -10,7 +10,6 @@ $('#add-to-whitelist').click(function() {
 	wlRow.setAttribute('aria-describedby', buttonId);
 
 	var wlItem = document.createElement('td');
-	
 
 	var input = document.createElement('input');
 	input.setAttribute('type', 'text');
@@ -118,7 +117,7 @@ async function update_user_prefs() {
 	});
 	body["blacklist"] = blacklistItems;
 
-	for i = 0; i < whitelistItems.length(); i++ {
+	for(let i = 0; i < whitelistItems.length; i++) {
 		if(blacklistItems.includes(whitelistItems[i])) {
 			noti_bubble('The item ' + whitelistItems[i] + ' exists within both the whitelist and blacklist', 
 				'{{ langmod.FAIL }}', 'warning', true, false, '6000', true);
