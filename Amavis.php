@@ -200,7 +200,7 @@ class Amavis {
 				$userId = $result->id;
 			} else {
 				$this->dbConn->query("INSERT INTO users ( null, 7, 1, '{$unixUser}', 'UNIX User' )");
-				$userId = $this->dbConn->last_insert_id();
+				$userId = $this->dbConn->insert_id;
 			}
 
 			return $userId;
