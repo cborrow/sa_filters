@@ -109,7 +109,7 @@ class Amavis {
 	}
 
 	protected function addToWbList($value, $wb) {
-		if ($wb != 'W' || $wb != 'B') {
+		if ($wb != 'W' && $wb != 'B') {
 			error_log("Invalid option for \$wb should be W or B only");
 			return false;
 		}
@@ -137,7 +137,7 @@ class Amavis {
 	}
 
 	protected function removeFromWbList($value, $wb) {
-		if ($wb != 'W' || $wb != 'B') {
+		if ($wb != 'W' && $wb != 'B') {
 			error_log("Error: Invalid option for \$wb should be W or B only");
 			return false;
 		}
@@ -160,7 +160,7 @@ class Amavis {
 	}
 
 	protected function existsInWbList($value, $wb = null) {
-		if ($wb != 'W' || $wb != 'B') {
+		if ($wb != 'W' && $wb != 'B') {
 			error_log("Error: Invalid option for \$wb should be W or B only");
 			return false;
 		}
