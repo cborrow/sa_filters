@@ -10,12 +10,12 @@ if (! function_exists('str_starts_with')) {
 }
 
 class UserPrefs {
-	protected $_userConfigPath;
-	protected $_saInfo;
+	private $_userConfigPath;
+	private $_saInfo;
 
-	protected $_whitelist;
-	protected $_blacklist;
-	protected $_customScores;
+	private $_whitelist;
+	private $_blacklist;
+	private $_customScores;
 
 	public $scoreThreshold    = 5.0;
 	public $subjectRewriteStr = "";
