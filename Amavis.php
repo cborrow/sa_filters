@@ -46,7 +46,7 @@ class Amavis {
 				if ($stmt->execute()) {
 					$result = $stmt->get_result();
 
-					if ($result->num_rows > 1) {
+					if ($result !== false && $result->num_rows > 1) {
 						return $result->fetch_all(MYSQLI_ASSOC);
 					} else {
 						return $result->fetch_array();
@@ -179,7 +179,7 @@ class Amavis {
 				if ($wb != null) {
 					$result = $stmt->get_result();
 
-					if ($result->fetch_object()->wb != $wb) {
+					if ($result !== false && $result->fetch_object()->wb != $wb) {
 						return false;
 					}
 				}
@@ -196,7 +196,7 @@ class Amavis {
 
 			$result = $this->dbConn->query("SELECT id FROM users WHERE email='{$unixUser}");
 
-			if ($result->num_rows() > 0) {
+			if ($result !== false && $result->num_rows > 0) {
 				$userId = $result->id;
 			} else {
 				$this->dbConn->query("INSERT INTO users ( null, 7, 1, '{$unixUser}', 'UNIX User' )");
