@@ -41,7 +41,12 @@ class Amavis {
 				$userId = $this->getCurrentUserId();
 
 				$stmt = $this->dbConn->prepare("SELECT * FROM wblist WHERE rid=? AND sid=?");
-				$stmt->bind_param('ii', $userId, $senderId);
+
+				if ($stmt != null && $stmt !== false) {
+					$stmt->bind_param('ii', $userId, $senderId);
+				} else {
+					error_log("Error: Failed to create prepared statement");
+				}
 
 				if ($stmt->execute()) {
 					$result = $stmt->get_result();
@@ -69,7 +74,12 @@ class Amavis {
 			$userId = $this->getCurrentUserId();
 
 			$stmt = $this->dbConn->prepare("SELECT * FROM wblist WHERE rid=? AND wb='W'");
-			$stmt->bind_param('i', $userId);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param('i', $userId);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute()) {
 				$result = $stmt->get_result();
@@ -95,7 +105,12 @@ class Amavis {
 			$userId = $this->getCurrentUserId();
 
 			$stmt = $this->dbConn->prepare("SELECT * FROM wblist WHERE rid=? AND wb='B'");
-			$stmt->bind_param('i', $userId);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param('i', $userId);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute()) {
 				$result = $stmt->get_result();
@@ -127,7 +142,12 @@ class Amavis {
 			}
 
 			$stmt = $this->dbConn->prepare("INSERT INTO wblist ( ?, ?, '?' )");
-			$stmt->bind_param("iis", $userId, $senderId, $wb);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param("iis", $userId, $senderId, $wb);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute()) {
 				return true;
@@ -150,7 +170,12 @@ class Amavis {
 			$userId = $this->getCurrentUserId();
 
 			$stmt = $this->dbConn->prepare("DELETE FROM wblist WHERE rid=? AND sid=? AND wb='?'");
-			$stmt->bind_param('iis', $userId, $senderId, $wb);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param('iis', $userId, $senderId, $wb);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute()) {
 				return true;
@@ -173,7 +198,12 @@ class Amavis {
 			$userId = $this->getCurrentUserId();
 
 			$stmt = $this->dbConn->prepare("SELECT COUNT(sid) AS total,wb FROM wblist WHERE rid=? AND sid=?");
-			$stmt->bind_param("ii", $userId, $senderId);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param("ii", $userId, $senderId);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute() and $stmt->num_rows > 0) {
 				if ($wb != null) {
@@ -213,7 +243,12 @@ class Amavis {
 			$userId = 0;
 
 			$stmt = $this->dbConn->prepare("SELECT id FROM users WHERE email='?'");
-			$stmt->bind_param('s', $user);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param('s', $user);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute() && $stmt->num_rows > 0) {
 				$result = $stmt->get_result();
@@ -223,7 +258,12 @@ class Amavis {
 				$stmt->free();
 			} else {
 				$stmt = $this->dbConn->prepare("INSERT INTO users ( null, 7, 1, '?', '?' )");
-				$stmt->bind_param('ss', $user, $user);
+
+				if ($stmt != null && $stmt !== false) {
+					$stmt->bind_param('ss', $user, $user);
+				} else {
+					error_log("Error: Failed to create prepared statement");
+				}
 
 				if ($stmt->execute() && $stmt->affected_rows > 0) {
 					$userId = $stmt->insert_id;
@@ -236,10 +276,20 @@ class Amavis {
 	}
 
 	protected function getSenderId($value) {
+		if ($value == null || $value == "") {
+			error_log("Error: Sender must not be null or empty");
+			return false;
+		}
+
 		if ($this->isDbConnected()) {
 			if ($this->hasSender($value) === false) {
 				$stmt = $this->dbConn->prepare("INSERT INTO mailaddr ( null, 7, '?')");
-				$stmt->bind_param("s", $value);
+
+				if ($stmt != null && $stmt !== false) {
+					$stmt->bind_param("s", $value);
+				} else {
+					error_log("Error: Failed to create prepared statement");
+				}
 
 				if ($stmt->execute()) {
 					$senderId = $stmt->insert_id;
@@ -255,7 +305,12 @@ class Amavis {
 	protected function hasUser($name) {
 		if ($this->isDbConnected()) {
 			$stmt = $this->dbConn->prepare("SELECT id FROM users WHERE email='?'");
-			$stmt->bind_param("s", $name);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param("s", $name);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute() && $stmt->num_rows > 0) {
 				$stmt->free();
@@ -268,7 +323,12 @@ class Amavis {
 	protected function hasSender($value) {
 		if ($this->isDbConnected()) {
 			$stmt = $this->dbConn->prepare("SELECT id FROM mailaddr WHERE email='?'");
-			$stmt->bind_param("s", $value);
+
+			if ($stmt != null && $stmt !== false) {
+				$stmt->bind_param("s", $value);
+			} else {
+				error_log("Error: Failed to create prepared statement");
+			}
 
 			if ($stmt->execute() && $stmt->num_rows > 0) {
 				$stmt->free();
@@ -301,11 +361,21 @@ class Amavis {
 
 							if ($userId !== false && $userId > 0 && $emailUserId !== false && $emailUserId > 0) {
 								$stmt = $this->dbConn->prepare("SELECT * FROM user_maps WHERE owner_id=? AND user_id=?");
-								$stmt->bind_param('ii', $userId, $emailUserId);
+
+								if ($stmt != null && $stmt !== false) {
+									$stmt->bind_param('ii', $userId, $emailUserId);
+								} else {
+									error_log("Error: Failed to create prepared statement");
+								}
 
 								if ($stmt->execute() && $stmt->num_rows == 0) {
 									$stmt = $this->dbConn->prepare("INSERT INTO user_maps ( ?, ? )");
-									$stmt->bind_param('ii', $userId, $emailUserId);
+
+									if ($stmt != null && $stmt !== false) {
+										$stmt->bind_param('ii', $userId, $emailUserId);
+									} else {
+										error_log("Error: Failed to create prepared statement");
+									}
 
 									if ($stmt->execute() === false || $stmt->affected_rows == 0) {
 										error_log("Unable to add user {$emailAddr} for owner {$owner} to user_maps table");
